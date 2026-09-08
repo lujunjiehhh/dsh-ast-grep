@@ -13,17 +13,15 @@ The plugin runs directly on `@ast-grep/napi`; it does not spawn the ast-grep CLI
 
 ## Install
 
-Requirements: Node.js `^22.19.0 || >=24.0.0`, pnpm, and a DSH profile.
+Requirements: Node.js `^22.19.0 || >=24.0.0` and DSH. Install directly from GitHub in one command:
 
 ```bash
-git clone https://github.com/lujunjiehhh/dsh-ast-grep.git
-cd dsh-ast-grep
-pnpm install --ignore-scripts
-pnpm test
-dsh plugin --profile web add ./
+dsh plugin --profile web add github:lujunjiehhh/dsh-ast-grep --ignore-scripts
 ```
 
-Use the profile name that launches your DSH process if it is not `web`.
+Use the profile name that launches your DSH process if it is not `web`. For example, the Desktop profile may be named `web.backup`. `--ignore-scripts` is intentional: the official language packages already include prebuilt parsers, so no dependency build scripts are needed.
+
+To work on the plugin itself instead, clone the repository and run `pnpm install --ignore-scripts && pnpm check`.
 
 ## Examples
 
