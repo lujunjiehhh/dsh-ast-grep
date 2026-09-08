@@ -38,6 +38,21 @@ await tools.ast_grep_search({
 })
 ```
 
+### Contextual patterns
+
+Some grammars need context to disambiguate a pattern. For example, match a Markdown heading rather than only its `#` marker:
+
+```ts
+await tools.ast_grep_search({
+  source: '# Title\n',
+  pattern: { context: '# $TITLE\n', selector: 'atx_heading' },
+  language: 'markdown',
+  capture_names: ['TITLE'],
+})
+```
+
+Contextual patterns accept `context`, optional `selector`, and optional `strictness`.
+
 ### Inspect syntax
 
 ```ts

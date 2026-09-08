@@ -37,6 +37,16 @@ assert.equal(pythonResult.count, 1)
 assert.equal(pythonResult.matches[0].text, 'print(name)')
 assert.equal(pythonResult.matches[0].captures.FN[0].text, 'print')
 
+const markdownResult = await definition.execute({
+  source: '# Title\n',
+  pattern: { context: '# $TITLE\n', selector: 'atx_heading' },
+  language: 'markdown',
+  capture_names: ['TITLE'],
+})
+assert.equal(markdownResult.count, 1)
+assert.equal(markdownResult.matches[0].kind, 'atx_heading')
+assert.equal(markdownResult.matches[0].captures.TITLE[0].text, 'Title')
+
 const supported = definition.parameters.properties.language.enum
 for (const language of supported) {
   const smoke = await definition.execute({ source: 'x', pattern: '$X', language })

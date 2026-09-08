@@ -62,10 +62,11 @@ const DYNAMIC_LANGUAGES = Object.freeze({
   yaml,
 })
 
-const REGISTRATION_KEY = Symbol.for('dsh-ast-grep.dynamic-languages.v1')
-if (!globalThis[REGISTRATION_KEY]) {
+const REGISTRATION_KEY = Symbol.for('dsh-ast-grep.dynamic-language-apis.v1')
+const registeredApis = globalThis[REGISTRATION_KEY] ??= new WeakSet()
+if (!registeredApis.has(parse)) {
   registerDynamicLanguage(DYNAMIC_LANGUAGES)
-  globalThis[REGISTRATION_KEY] = true
+  registeredApis.add(parse)
 }
 
 const LANGUAGES = Object.freeze({
@@ -295,8 +296,13 @@ function capture(node, name, limit) {
 
 function normalizeArgs(args) {
   const { source, language } = sourceAndLanguage(args)
-  if (typeof args.pattern !== 'string' || args.pattern.length === 0) {
-    throw new Error('pattern must be a non-empty string')
+  const pattern = args.pattern
+  const validPattern = typeof pattern === 'string'
+    ? pattern.length > 0
+    : pattern && typeof pattern === 'object' && !Array.isArray(pattern) &&
+      typeof pattern.context === 'string' && pattern.context.length > 0
+  if (!validPattern) {
+    throw new Error('pattern must be a non-empty string or an object with non-empty context')
   }
   const captureNames = args.capture_names ?? []
   if (!Array.isArray(captureNames) || captureNames.length > 20) {
@@ -310,7 +316,7 @@ function normalizeArgs(args) {
   }
   return {
     source,
-    pattern: args.pattern,
+    pattern,
     language,
     captureNames: uniqueCaptureNames,
     maxMatches: integer(args.max_matches, DEFAULT_MAX_MATCHES, 1, MAX_MATCHES, 'max_matches'),
@@ -327,7 +333,8 @@ function normalizeArgs(args) {
 function search(args) {
   const input = normalizeArgs(args)
   const root = parse(LANGUAGES[input.language], input.source).root()
-  const found = root.findAll(input.pattern)
+  const matcher = typeof input.pattern === 'string' ? input.pattern : { rule: { pattern: input.pattern } }
+  const found = root.findAll(matcher)
   const selected = found.slice(0, input.maxMatches)
   return {
     language: input.language,
@@ -429,7 +436,22 @@ export function apply(ctx) {
       additionalProperties: false,
       properties: {
         source: { type: 'string', description: 'Source text to parse.' },
-        pattern: { type: 'string', description: 'ast-grep pattern, for example $FN($$$ARGS).' },
+        pattern: {
+          oneOf: [
+            { type: 'string' },
+            {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                context: { type: 'string' },
+                selector: { type: 'string' },
+                strictness: { type: 'string', enum: ['cst', 'smart', 'ast', 'relaxed', 'signature'] },
+              },
+              required: ['context'],
+            },
+          ],
+          description: 'ast-grep string pattern or contextual pattern object. Context + selector is useful for Markdown headings and other ambiguous syntax.',
+        },
         language: {
           type: 'string',
           enum: SUPPORTED_LANGUAGES,
