@@ -1,0 +1,3 @@
+- insert:
+    - id: ast-grep-tool
+      name: dsh-ast-grep

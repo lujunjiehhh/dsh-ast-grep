@@ -1,0 +1,82 @@
+{
+  "name": "dsh-ast-grep",
+  "version": "0.1.0",
+  "description": "Persistent ast-grep structural search tools for DeepSeek Harness",
+  "license": "MIT",
+  "author": "lujunjiehhh",
+  "homepage": "https://github.com/lujunjiehhh/dsh-ast-grep#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lujunjiehhh/dsh-ast-grep.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lujunjiehhh/dsh-ast-grep/issues"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "ast-grep",
+    "structural-search",
+    "cordis"
+  ],
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "docs",
+    "cordis.patch.yml"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "scripts": {
+    "test": "node test.mjs",
+    "check": "node --check src/index.js && node test.mjs",
+    "prepack": "pnpm check"
+  },
+  "dependencies": {
+    "@ast-grep/lang-angular": "0.0.10",
+    "@ast-grep/lang-bash": "0.0.8",
+    "@ast-grep/lang-bicep": "0.0.2",
+    "@ast-grep/lang-c": "0.0.6",
+    "@ast-grep/lang-cpp": "0.0.6",
+    "@ast-grep/lang-csharp": "0.0.6",
+    "@ast-grep/lang-css": "0.0.7",
+    "@ast-grep/lang-dart": "0.0.7",
+    "@ast-grep/lang-elixir": "0.0.7",
+    "@ast-grep/lang-glimmer-javascript": "0.0.2",
+    "@ast-grep/lang-glimmer-typescript": "0.0.2",
+    "@ast-grep/lang-go": "0.0.6",
+    "@ast-grep/lang-haskell": "0.0.7",
+    "@ast-grep/lang-html": "0.0.7",
+    "@ast-grep/lang-java": "0.0.7",
+    "@ast-grep/lang-javascript": "0.0.7",
+    "@ast-grep/lang-json": "0.0.7",
+    "@ast-grep/lang-kotlin": "0.0.7",
+    "@ast-grep/lang-lua": "0.0.7",
+    "@ast-grep/lang-markdown": "0.0.6",
+    "@ast-grep/lang-php": "0.0.7",
+    "@ast-grep/lang-python": "0.0.6",
+    "@ast-grep/lang-ruby": "0.0.7",
+    "@ast-grep/lang-rust": "0.0.7",
+    "@ast-grep/lang-scala": "0.0.7",
+    "@ast-grep/lang-sql": "0.0.8",
+    "@ast-grep/lang-swift": "0.0.8",
+    "@ast-grep/lang-toml": "0.0.9",
+    "@ast-grep/lang-tsx": "0.0.7",
+    "@ast-grep/lang-typescript": "0.0.7",
+    "@ast-grep/lang-yaml": "0.0.6",
+    "@ast-grep/napi": "0.45.3",
+    "yaml": "2.7.1"
+  }
+}
